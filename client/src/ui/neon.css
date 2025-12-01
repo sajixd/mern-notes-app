@@ -1,0 +1,79 @@
+:root{
+  --bg1: #010101;
+  --green: #00ff88;
+  --green-2: #00cc66;
+  --panel-bg: rgba(2,6,5,0.55);
+}
+
+.neon-bg{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(1200px 600px at 10% 20%, rgba(0,200,120,0.04), transparent), radial-gradient(800px 400px at 90% 80%, rgba(0,200,120,0.03), transparent), var(--bg1);
+  overflow:hidden;
+}
+
+.neon-grid{
+  position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(rgba(0,255,150,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,150,0.02) 1px, transparent 1px);
+  background-size: 60px 60px, 60px 60px;
+  opacity:0.8;
+  transform: translateZ(0);
+  animation: grid-scroll 20s linear infinite;
+}
+
+.neon-container{
+  position:relative;
+  width:100%;
+  max-width:980px;
+  padding:6vmin;
+  transform-style:preserve-3d;
+  perspective:1000px;
+}
+
+.neon-panel{
+  position:relative;
+  border-radius:18px;
+  padding:28px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
+  border: 1px solid rgba(0,255,150,0.06);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,150,0.04) inset, 0 0 24px rgba(0,255,150,0.08);
+  color: #c8ffe0;
+  transform: translateZ(40px) rotateX(6deg);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+.neon-panel h1{
+  margin-top:0;
+  letter-spacing:1px;
+  color: var(--green);
+  text-shadow: 0 2px 12px rgba(0,255,150,0.12), 0 0 18px rgba(0,255,150,0.06);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.neon-panel .subtle{ color: rgba(200,255,220,0.6); }
+
+.neon-flares{
+  pointer-events:none;
+  position:absolute; inset:0; z-index:0;
+  background: radial-gradient(600px 200px at 10% 10%, rgba(0,255,150,0.06), transparent), radial-gradient(400px 140px at 90% 90%, rgba(0,200,120,0.04), transparent);
+  mix-blend-mode: screen;
+  animation: flares 8s ease-in-out infinite alternate;
+}
+
+@keyframes flares{
+  from{ filter: blur(10px) saturate(120%); opacity:0.9 }
+  to{ filter: blur(24px) saturate(140%); opacity:0.6 }
+}
+
+@keyframes grid-scroll{
+  from{ background-position: 0 0, 0 0 }
+  to{ background-position: -2400px 0, 2400px 0 }
+}
+
+/* small responsive tweaks */
+@media (max-width:640px){
+  .neon-panel{ padding:18px; border-radius:12px; }
+}
