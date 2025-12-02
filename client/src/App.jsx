@@ -23,7 +23,7 @@ export default function App() {
   // Load notes from API
   const loadNotes = async () => {
     try {
-      const res = await axios.get('/notes');
+      const res = await axios.get('/api/notes');
       setNotes(res.data);
     } catch (error) {
       console.error('Error loading notes:', error);
@@ -41,10 +41,10 @@ export default function App() {
   const handleSubmit = async (form) => {
     try {
       if (editingNote) {
-        await axios.put(`/notes/${editingNote._id}`, form);
+        await axios.put(`/api/notes/${editingNote._id}`, form);
         setEditingNote(null);
       } else {
-        await axios.post('/notes', form);
+        await axios.post('/api/notes', form);
       }
       setModalOpen(false);
       loadNotes();
@@ -55,7 +55,7 @@ export default function App() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/notes/${id}`);
+      await axios.delete(`/api/notes/${id}`);
       loadNotes();
     } catch (error) {
       console.error('Error deleting note:', error);
