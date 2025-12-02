@@ -7,7 +7,7 @@ import NotesList from './components/NotesList';
 import AddNote from './components/AddNote';
 import FAB from './components/FAB';
 import Modal from './components/Modal';
-import AuthPage from './components/Auth/AuthPage';
+import SettingsModal from './components/SettingsModal';
 import { motion } from 'framer-motion';
 
 // App: Dribbble design with dark/light mode and Auth
@@ -17,6 +17,7 @@ export default function App() {
   const [notes, setNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   // Load notes from API
   const loadNotes = async () => {
@@ -152,6 +153,30 @@ export default function App() {
               {isDark ? '☀️' : '🌙'}
             </motion.button>
 
+            {/* Settings Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSettingsOpen(true)}
+              style={{
+                padding: '10px 16px',
+                borderRadius: theme.borderRadius.md,
+                border: `2px solid ${theme.colors.border}`,
+                background: theme.colors.cardBg,
+                color: theme.colors.text,
+                fontSize: '1.25rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'inherit',
+                boxShadow: theme.shadows.card,
+              }}
+              aria-label="Settings"
+            >
+              ⚙️
+            </motion.button>
+
             {/* Logout Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -171,31 +196,6 @@ export default function App() {
               }}
             >
               Logout
-            </motion.button>
-
-            {/* Delete Account Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                  useAuth().deleteAccount();
-                }
-              }}
-              style={{
-                padding: '10px 16px',
-                borderRadius: theme.borderRadius.md,
-                border: `2px solid ${theme.colors.danger}`,
-                background: 'transparent',
-                color: theme.colors.danger,
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                marginLeft: '8px',
-              }}
-            >
-              Delete
             </motion.button>
           </div>
         </div>
@@ -233,6 +233,9 @@ export default function App() {
           onClose={() => setModalOpen(false)}
         />
       </Modal>
+
+      {/* Settings Modal */}
+      <SettingsModal isOpen={isSettingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }

@@ -111,20 +111,40 @@ export const AuthProvider = ({ children }) => {
             setError(null);
       };
 
-      const deleteAccount = async () => {
+      const updateProfile = async (data) => {
             try {
-                  await axios.delete('/api/auth/me');
+                  const res = await axios.put('/api/auth/profile', data);
+                  setUser(res.data.user);
+                  return { success: true, message: res.data.message };
+            } catch (err) {
+                  console.error('Update profile error:', err);
+                  return { success: false, message: err.response?.data?.message || 'Failed to update profile' };
+            }
+      };
+
+      const changePassword = async (data) => {
+            try {
+                  const res = await axios.put('/api/auth/password', data);
+                  return { success: true, message: res.data.message };
+            } catch (err) {
+                  console.error('Change password error:', err);
+                  return { success: false, message: err.response?.data?.message || 'Failed to update password' };
+            }
+      };
+
+      const deleteAccount = async (password) => {
+            try {
+                  await axios.delete('/api/auth/me', { data: { password } });
                   logout();
-                  return true;
+                  return { success: true };
             } catch (err) {
                   console.error('Delete account error:', err);
-                  setError(err.response?.data?.message || 'Failed to delete account');
-                  return false;
+                  return { success: false, message: err.response?.data?.message || 'Failed to delete account' };
             }
       };
 
       return (
-            <AuthContext.Provider value={{ user, loading, error, login, signup, logout, deleteAccount }}>
+            <AuthContext.Provider value={{ user, loading, error, login, signup, logout, updateProfile, changePassword, deleteAccount }}>
                   {children}
             </AuthContext.Provider>
       );

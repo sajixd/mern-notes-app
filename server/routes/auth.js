@@ -97,17 +97,85 @@ router.get('/me', auth, async (req, res) => {
       }
 });
 
-// @route   DELETE /api/auth/me
-router.delete('/me', auth, async (req, res) => {
+// @route   PUT /api/auth/profile
+router.put('/profile', auth, async (req, res) => {
       try {
-            // Delete user's notes first (optional but good practice)
-            // Assuming you have a Note model, you'd import it and delete notes here.
-            // For now, we'll just delete the user.
+            const { name, email } = req.body;
+            const user = await User.findById(req.userId);
 
-            const user = await User.findByIdAndDelete(req.userId);
             if (!user) {
                   return res.status(404).json({ success: false, message: 'User not found' });
             }
+
+            if (email && email !== user.email) {
+                  const existingUser = await User.findOne({ email });
+                  if (existingUser) {
+                        return res.status(400).json({ success: false, message: 'Email already in use' });
+                  }
+                  user.email = email;
+            }
+
+            if (name) user.name = name;
+
+            await user.save();
+
+            res.json({
+                  success: true,
+                  message: 'Profile updated successfully',
+                  user: { id: user._id, name: user.name, email: user.email }
+            });
+      } catch (error) {
+            console.error('Update profile error:', error);
+            res.status(500).json({ success: false, message: 'Server error' });
+      }
+});
+
+// @route   PUT /api/auth/password
+router.put('/password', auth, async (req, res) => {
+      try {
+            const { currentPassword, newPassword } = req.body;
+            const user = await User.findById(req.userId).select('+password');
+
+            if (!user) {
+                  return res.status(404).json({ success: false, message: 'User not found' });
+            }
+
+            const isMatch = await user.comparePassword(currentPassword);
+            if (!isMatch) {
+                  return res.status(400).json({ success: false, message: 'Incorrect current password' });
+            }
+
+            user.password = newPassword;
+            await user.save();
+
+            res.json({ success: true, message: 'Password updated successfully' });
+      } catch (error) {
+            console.error('Update password error:', error);
+            res.status(500).json({ success: false, message: 'Server error' });
+      }
+});
+
+// @route   DELETE /api/auth/me
+router.delete('/me', auth, async (req, res) => {
+      try {
+            const { password } = req.body;
+
+            if (!password) {
+                  return res.status(400).json({ success: false, message: 'Password is required to delete account' });
+            }
+
+            const user = await User.findById(req.userId).select('+password');
+            if (!user) {
+                  return res.status(404).json({ success: false, message: 'User not found' });
+            }
+
+            const isMatch = await user.comparePassword(password);
+            if (!isMatch) {
+                  return res.status(400).json({ success: false, message: 'Incorrect password' });
+            }
+
+            await User.findByIdAndDelete(req.userId);
+            // Ideally delete all user notes here too
 
             res.json({ success: true, message: 'Account deleted successfully' });
       } catch (error) {
