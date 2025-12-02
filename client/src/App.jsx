@@ -7,6 +7,7 @@ import NotesList from './components/NotesList';
 import AddNote from './components/AddNote';
 import FAB from './components/FAB';
 import Modal from './components/Modal';
+import AuthPage from './components/Auth/AuthPage';
 import SettingsModal from './components/SettingsModal';
 import { motion } from 'framer-motion';
 
