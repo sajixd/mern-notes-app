@@ -10,8 +10,8 @@ export default function Signup({ onSwitch }) {
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const [isLoading, setIsLoading] = useState(false);
-
       const [showPassword, setShowPassword] = useState(false);
+      const [successMessage, setSuccessMessage] = useState('');
 
       const handleSubmit = async (e) => {
             e.preventDefault();
@@ -19,8 +19,10 @@ export default function Signup({ onSwitch }) {
             const success = await signup(name, email, password);
             setIsLoading(false);
             if (success) {
-                  alert('Account created successfully! Please login.');
-                  onSwitch();
+                  setSuccessMessage('Account created successfully! Redirecting to login...');
+                  setTimeout(() => {
+                        onSwitch();
+                  }, 2000);
             }
       };
 
@@ -40,6 +42,21 @@ export default function Signup({ onSwitch }) {
                   }}>
                         Create Account
                   </h2>
+
+                  {successMessage && (
+                        <div style={{
+                              padding: '12px',
+                              background: 'rgba(72, 187, 120, 0.1)',
+                              color: '#48bb78',
+                              borderRadius: theme.borderRadius.md,
+                              marginBottom: '16px',
+                              fontSize: '0.875rem',
+                              textAlign: 'center',
+                              border: '1px solid rgba(72, 187, 120, 0.2)'
+                        }}>
+                              {successMessage}
+                        </div>
+                  )}
 
                   {error && (
                         <div style={{

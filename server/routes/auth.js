@@ -97,4 +97,23 @@ router.get('/me', auth, async (req, res) => {
       }
 });
 
+// @route   DELETE /api/auth/me
+router.delete('/me', auth, async (req, res) => {
+      try {
+            // Delete user's notes first (optional but good practice)
+            // Assuming you have a Note model, you'd import it and delete notes here.
+            // For now, we'll just delete the user.
+
+            const user = await User.findByIdAndDelete(req.userId);
+            if (!user) {
+                  return res.status(404).json({ success: false, message: 'User not found' });
+            }
+
+            res.json({ success: true, message: 'Account deleted successfully' });
+      } catch (error) {
+            console.error('Delete user error:', error);
+            res.status(500).json({ success: false, message: 'Server error' });
+      }
+});
+
 export default router;

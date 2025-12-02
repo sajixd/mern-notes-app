@@ -172,6 +172,31 @@ export default function App() {
             >
               Logout
             </motion.button>
+
+            {/* Delete Account Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                  useAuth().deleteAccount();
+                }
+              }}
+              style={{
+                padding: '10px 16px',
+                borderRadius: theme.borderRadius.md,
+                border: `2px solid ${theme.colors.danger}`,
+                background: 'transparent',
+                color: theme.colors.danger,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                marginLeft: '8px',
+              }}
+            >
+              Delete
+            </motion.button>
           </div>
         </div>
       </header>
