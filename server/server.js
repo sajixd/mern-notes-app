@@ -17,7 +17,8 @@ app.use(express.json());
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://mern-notes-app-three.vercel.app/',
+  'https://mern-notes-app-three.vercel.app', // Replace with your frontend URL
+  // 'https://your-frontend-domain.netlify.app' // If using Netlify
 ];
 
 app.use(cors({
